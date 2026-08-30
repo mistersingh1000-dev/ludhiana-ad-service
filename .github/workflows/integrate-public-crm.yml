@@ -1,0 +1,30 @@
+name: Integrate Public CRM Dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/integrate_public_crm_dashboard.py'
+      - '.github/workflows/integrate-public-crm.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrate public CRM dashboard into homepage
+        run: python scripts/integrate_public_crm_dashboard.py
+      - name: Commit homepage integration
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No homepage changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Publish CRM analytics on homepage"
+          git push

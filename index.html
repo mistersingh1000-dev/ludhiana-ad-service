@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ludhiana ke Business ke liye Ads — Free Demo</title>
+<title>Ludhiana ke Business ke liye Ads — Check Our Plans</title>
 <meta name="description" content="Ludhiana ke local businesses ke liye Facebook & Instagram ads. Seedhe aapke area ke customers — leads, calls aur messages. Free demo ke liye WhatsApp karein." />
-<meta property="og:title" content="Ludhiana ke Business ke liye Ads — Free Demo" />
-<meta property="og:description" content="Aapke area ke customers seedhe aapke WhatsApp par. Facebook & Instagram ads — pehle free demo, phir baat." />
+<meta property="og:title" content="Ludhiana ke Business ke liye Ads — Check Our Plans" />
+<meta property="og:description" content="Aapke area ke customers seedhe aapke WhatsApp par. Facebook & Instagram ads — pehle check our pricing, phir baat." />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 
@@ -17,7 +17,7 @@
 <script>
   const WHATSAPP_NUMBER = "917009732517";     // <-- apna number
   const BRAND_NAME      = "Ludhiana Ad Service"; // <-- apna brand naam
-  const PREFILL_MSG     = "Hi, mujhe aapka number ad se mila. Mujhe apne business ke liye free demo ke baare mein jaanna hai.";
+  const PREFILL_MSG     = "Hi, I got your number from your website. May I know your plans?";
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -218,6 +218,15 @@
   .qa.open .plus::after{opacity:0}
   .qa .ans{max-height:0;overflow:hidden;transition:max-height .25s ease}
   .qa .ans p{padding:0 20px 18px;font-size:14.5px;color:var(--muted);line-height:1.6}
+
+
+  /* floating WhatsApp button — bottom right */
+  .wa-float{position:fixed;right:22px;bottom:22px;z-index:999;display:grid;place-items:center;width:60px;height:60px;border-radius:50%;background:#25D366;color:#fff;text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .15s ease,box-shadow .15s ease}
+  .wa-float:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 32px rgba(0,0,0,.34)}
+  .wa-float svg{width:31px;height:31px}
+  .wa-float:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  @media(max-width:640px){.wa-float{right:16px;bottom:82px;width:56px;height:56px}.wa-float svg{width:29px;height:29px}}
+
 </style>
 </head>
 <body>
@@ -227,7 +236,7 @@
       <div class="brand"><span class="dot"></span><span id="brandTop">Ludhiana Ad Service</span></div>
       <a class="cta-sm" id="waTop" href="#">
         <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M.06 24l1.68-6.13A11.9 11.9 0 0 1 .16 11.9C.16 5.33 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.8 11.8 0 0 1 3.48 8.41c0 6.56-5.34 11.9-11.9 11.9a11.9 11.9 0 0 1-5.7-1.45L.06 24zm6.6-3.8c1.7.99 3.3 1.58 5.4 1.58 5.44 0 9.87-4.43 9.88-9.88a9.8 9.8 0 0 0-2.9-6.99A9.8 9.8 0 0 0 12.07 2c-5.45 0-9.88 4.43-9.88 9.88 0 2.02.6 3.6 1.6 5.28l-.98 3.58 3.85-1.54zM17.4 14.3c-.07-.12-.27-.2-.56-.34-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.5l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47 0 1.46 1.06 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42z"/></svg>
-        <span>Free Demo</span>
+        <span>Check Our Plans</span>
       </a>
     </div>
   </header>
@@ -244,7 +253,7 @@
         <div class="cta-row">
           <a class="btn-wa" id="waHero" href="#">
             <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M.06 24l1.68-6.13A11.9 11.9 0 0 1 .16 11.9C.16 5.33 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.8 11.8 0 0 1 3.48 8.41c0 6.56-5.34 11.9-11.9 11.9a11.9 11.9 0 0 1-5.7-1.45L.06 24zm6.6-3.8c1.7.99 3.3 1.58 5.4 1.58 5.44 0 9.87-4.43 9.88-9.88a9.8 9.8 0 0 0-2.9-6.99A9.8 9.8 0 0 0 12.07 2c-5.45 0-9.88 4.43-9.88 9.88 0 2.02.6 3.6 1.6 5.28l-.98 3.58 3.85-1.54zM17.4 14.3c-.07-.12-.27-.2-.56-.34-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.5l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47 0 1.46 1.06 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42z"/></svg>
-            FREE Demo ke liye message karein
+            Check Packages ke liye message karein
           </a>
           <span class="note">Koi advance fees nahi · pehle result, phir baat</span>
         </div>
@@ -624,14 +633,18 @@
   <div class="sticky-cta">
     <a id="waSticky" href="#">
       <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M.06 24l1.68-6.13A11.9 11.9 0 0 1 .16 11.9C.16 5.33 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.8 11.8 0 0 1 3.48 8.41c0 6.56-5.34 11.9-11.9 11.9a11.9 11.9 0 0 1-5.7-1.45L.06 24zm6.6-3.8c1.7.99 3.3 1.58 5.4 1.58 5.44 0 9.87-4.43 9.88-9.88a9.8 9.8 0 0 0-2.9-6.99A9.8 9.8 0 0 0 12.07 2c-5.45 0-9.88 4.43-9.88 9.88 0 2.02.6 3.6 1.6 5.28l-.98 3.58 3.85-1.54z"/></svg>
-      FREE Demo — WhatsApp karein
+      Check Packages — WhatsApp karein
     </a>
   </div>
+
+  <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" title="Check our plans on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.06 24l1.68-6.13A11.9 11.9 0 0 1 .16 11.9C.16 5.33 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.8 11.8 0 0 1 3.48 8.41c0 6.56-5.34 11.9-11.9 11.9a11.9 11.9 0 0 1-5.7-1.45L.06 24zm6.6-3.8c1.7.99 3.3 1.58 5.4 1.58 5.44 0 9.87-4.43 9.88-9.88a9.8 9.8 0 0 0-2.9-6.99A9.8 9.8 0 0 0 12.07 2c-5.45 0-9.88 4.43-9.88 9.88 0 2.02.6 3.6 1.6 5.28l-.98 3.58 3.85-1.54zM17.4 14.3c-.07-.12-.27-.2-.56-.34-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.5l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47 0 1.46 1.06 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42z"/></svg>
+  </a>
 
 <script>
   (function(){
     var link = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(PREFILL_MSG);
-    ["waTop","waHero","waFinal","waFoot"].forEach(function(id){
+    ["waTop","waHero","waFinal","waFoot","waFloat"].forEach(function(id){
       var el = document.getElementById(id); if(el) el.setAttribute("href", link);
     });
     document.getElementById("brandTop").textContent = BRAND_NAME;
@@ -649,7 +662,7 @@
     if(send){
       send.addEventListener("click", function(){
         function v(id){ var e=document.getElementById(id); return e ? (e.value||"").trim() : ""; }
-        var msg = "Hi, mujhe apne business ke liye FREE demo chahiye.\n"
+        var msg = "Hi, I got your number from your website. May I know your plans?\n"
                 + "Naam: " + (v("fName")||"-") + "\n"
                 + "Business: " + (v("fBiz")||"-") + "\n"
                 + "Area: " + (v("fArea")||"-") + "\n"

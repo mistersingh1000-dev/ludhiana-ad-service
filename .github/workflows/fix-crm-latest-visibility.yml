@@ -1,0 +1,28 @@
+name: Fix CRM Latest Visibility
+on:
+  push:
+    paths:
+      - 'scripts/fix_crm_latest_visibility.py'
+      - '.github/workflows/fix-crm-latest-visibility.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python scripts/fix_crm_latest_visibility.py
+      - name: Commit CRM visibility fix
+        run: |
+          if git diff --quiet -- crm/index.html; then
+            echo 'No CRM changes needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add crm/index.html
+          git commit -m 'Fix CRM latest screenshot visibility'
+          git push

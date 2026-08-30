@@ -1,0 +1,31 @@
+name: Update WhatsApp and Demo Text
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_whatsapp_and_remove_demo.py'
+      - '.github/workflows/update-whatsapp-demo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Update homepage only
+        run: python scripts/update_whatsapp_and_remove_demo.py
+      - name: Commit homepage update
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No homepage changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add floating WhatsApp button and replace free demo text"
+          git push

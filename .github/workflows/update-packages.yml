@@ -1,0 +1,33 @@
+name: Update Homepage Packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_packages.py'
+      - '.github/workflows/update-packages.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update only pricing section
+        run: python scripts/update_packages.py
+
+      - name: Commit homepage pricing update
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No pricing changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Update homepage ad packages"
+          git push

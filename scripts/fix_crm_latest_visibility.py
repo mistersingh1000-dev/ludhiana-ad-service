@@ -1,0 +1,11 @@
+from pathlib import Path
+p=Path('crm/index.html')
+s=p.read_text(encoding='utf-8')
+s=s.replace('<script src="/crm/latest-screenshot-sync.js"></script>','<script src="/crm/latest-screenshot-sync.js?v=20260830-2"></script>')
+s=s.replace("function setRange(days){TO=new Date('2026-08-27T00:00:00');FROM=new Date(TO);FROM.setDate(FROM.getDate()-days+1)}","function setRange(days){TO=new Date();TO.setHours(0,0,0,0);FROM=new Date(TO);FROM.setDate(FROM.getDate()-days+1)}")
+s=s.replace("let FROM=null,TO=null;function dObj(s){return new Date((s||'2026-08-27')+'T00:00:00')}","let FROM=null,TO=null;function dObj(s){return new Date((s||new Date().toISOString().slice(0,10))+'T00:00:00')}")
+s=s.replace("today=o.date||'2026-08-27'","today=o.date||new Date().toISOString().slice(0,10)")
+s=s.replace("date:$('f9').value||'2026-08-27'","date:$('f9').value||new Date().toISOString().slice(0,10)")
+s=s.replace("date:$('f5').value||'2026-08-27'","date:$('f5').value||new Date().toISOString().slice(0,10)")
+s=s.replace("date:$('f3').value||'2026-08-27'","date:$('f3').value||new Date().toISOString().slice(0,10)")
+p.write_text(s,encoding='utf-8')

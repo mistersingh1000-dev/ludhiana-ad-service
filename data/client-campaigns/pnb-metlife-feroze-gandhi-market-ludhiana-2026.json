@@ -1,0 +1,48 @@
+{
+  "client_id": "pnb-metlife-feroze-gandhi-market-ludhiana",
+  "client_name": "PNB MetLife",
+  "location": "Feroze Gandhi Market, Ludhiana",
+  "source": "User-provided Meta Ads Manager screenshots",
+  "captured_on": "2026-10-21",
+  "metric_period": "Maximum (lifetime) selected",
+  "campaigns": [
+    {
+      "name": "met life -- leads ads campaign",
+      "messaging_conversations_started": 0,
+      "spend_inr": 0,
+      "cost_per_conversation_inr": 0,
+      "status": "Not delivering"
+    },
+    {
+      "name": "PNB METLIFE- MALE FEMALE JOB Campaign",
+      "messaging_conversations_started": 121,
+      "spend_inr": 551.53,
+      "cost_per_conversation_inr": 4.56,
+      "status": "Off"
+    },
+    {
+      "name": "pnb - hiring males/females campaign",
+      "messaging_conversations_started": 3,
+      "spend_inr": 58.73,
+      "cost_per_conversation_inr": 19.58,
+      "status": "Off"
+    },
+    {
+      "name": "PNB Met life insurance Campaign",
+      "messaging_conversations_started": 62,
+      "spend_inr": 2779.57,
+      "cost_per_conversation_inr": 44.83,
+      "status": "Off"
+    }
+  ],
+  "totals": {
+    "messaging_conversations_started": 186,
+    "ad_spend_inr": 3389.83
+  },
+  "notes": [
+    "One screenshot shows ad-level subset 92 conversations / ₹455.94 for the job campaign; excluded from aggregate to avoid double counting.",
+    "Ad account spending limit reached.",
+    "Historical snapshots; conversations do not equal confirmed leads or sales.",
+    "Do not double-count campaign-level and ad-level statistics."
+  ]
+}

@@ -29,8 +29,8 @@ Set secrets in Vercel Environment Variables, never in GitHub source or chat. Con
 
 ## OAuth callback URLs
 
-- Meta: `https://ads.lasmediaagency.online/api/social/meta/callback`
-- X: `https://ads.lasmediaagency.online/api/social/x/callback`
+- Meta: `https://lasmediaagency.online/api/social/meta/callback`
+- X: `https://lasmediaagency.online/api/social/x/callback`
 
 These are proposed callback URLs and must be added to the corresponding developer consoles after the routes are implemented.
 

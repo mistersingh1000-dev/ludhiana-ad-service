@@ -48,7 +48,39 @@ h1,h2,h3,.brand b,.stat strong{font-family:"Bricolage Grotesque",Inter,sans-seri
 @keyframes lasModalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(32,197,102,.35);outline-offset:2px}
 @media(max-width:700px){.side{background:linear-gradient(100deg,#061225,#0d1f3c);box-shadow:0 8px 26px rgba(7,20,38,.12)}.nav a.active,.nav button.active{box-shadow:inset 0 -3px 0 #20c566}.top{position:sticky;top:0;z-index:10}.content{padding-top:16px}}
-</style></head><body><div class="app"><aside class="side"><div class="brand"><b>LAS</b><small>Las Media Agency · CRM</small></div><div class="navlabel">WORKSPACE</div><nav class="nav"><a href="/crm/">⌂ CRM Home</a><a href="?view=admin" id="navAdmin">▣ Social Media Integration</a><a href="?view=client" id="navClient">◉ Client Workspace</a></nav><div class="navlabel">SOCIAL PUBLISHING</div><nav class="nav"><button class="active" data-tab="overview">▣ Overview</button><button data-tab="composer">✎ Create Post</button><button data-tab="history">◷ Publishing History</button></nav></aside><main class="main"><header class="top"><div><b id="topTitle">Social Media Integration · Admin</b><br><small id="topSub">Agency-wide client access and publishing overview</small></div><button class="btn alt" id="roleBtn">Switch to Client View</button></header><div class="content">
+
+/* Accessible customer-facing light/dark theme */
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.theme-toggle span:first-child{font-size:16px;line-height:1}
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="dark"] body{background:#071426;color:#e7eef8}
+html[data-theme="dark"] .top{background:rgba(10,25,46,.94);border-color:#243751}
+html[data-theme="dark"] .top b,html[data-theme="dark"] .head h1,html[data-theme="dark"] .stat strong,html[data-theme="dark"] .platform h3,html[data-theme="dark"] .ptitle h2,html[data-theme="dark"] .panel h2{color:#f3f7fc}
+html[data-theme="dark"] .stat,html[data-theme="dark"] .panel,html[data-theme="dark"] .platform{background:#10223b;border-color:#263b57;box-shadow:0 14px 36px rgba(0,0,0,.2)}
+html[data-theme="dark"] .muted,html[data-theme="dark"] .top small,html[data-theme="dark"] .stat span,html[data-theme="dark"] .platform p,html[data-theme="dark"] .foot small{color:#a8b8cd}
+html[data-theme="dark"] .btn.alt{background:#172d49;color:#e8f1fc;border-color:#34506e}
+html[data-theme="dark"] .btn.alt:hover{background:#1b3b58;border-color:#20c566;color:#fff}
+html[data-theme="dark"] .status{background:#263b55;color:#dbe7f5}
+html[data-theme="dark"] .status.ok{background:#123c2a;color:#83e6ad}
+html[data-theme="dark"] .status.warn{background:#493816;color:#ffd77a}
+html[data-theme="dark"] .note{background:#332b18;border-color:#665126;color:#ffdf91}
+html[data-theme="dark"] .field textarea,html[data-theme="dark"] .field input,html[data-theme="dark"] select{background:#0b1b30;color:#edf4fc;border-color:#38506d}
+html[data-theme="dark"] .checks label,html[data-theme="dark"] .tabs button{background:#132943;color:#dce8f6;border-color:#344b66}
+html[data-theme="dark"] .checks label:has(input:checked),html[data-theme="dark"] .tabs button.active{background:#123c2a;border-color:#20c566;color:#9af0bd}
+html[data-theme="dark"] .preview{background:#0b1b30;border-color:#344b66}
+html[data-theme="dark"] .previewbody{color:#edf4fc}
+html[data-theme="dark"] .table th{background:#172d49;color:#dce8f6}
+html[data-theme="dark"] .table td{color:#d0dced;border-color:#263b57}
+html[data-theme="dark"] .table tr:hover td{background:#142b46}
+html[data-theme="dark"] .foot{border-color:#263b57}
+html[data-theme="dark"] .modal{background:#10223b;border-color:#34506e}
+html[data-theme="dark"] .modal h3{color:#f3f7fc}
+html[data-theme="dark"] .modal p{color:#c3d1e2}
+html[data-theme="dark"] .empty{color:#a8b8cd}
+html[data-theme="dark"] .previewhead{background:#061225}
+@media(max-width:700px){.top-actions{gap:6px}.theme-toggle{padding:9px 10px}}
+</style></head><body><div class="app"><aside class="side"><div class="brand"><b>LAS</b><small>Las Media Agency · CRM</small></div><div class="navlabel">WORKSPACE</div><nav class="nav"><a href="/crm/">⌂ CRM Home</a><a href="?view=admin" id="navAdmin">▣ Social Media Integration</a><a href="?view=client" id="navClient">◉ Client Workspace</a></nav><div class="navlabel">SOCIAL PUBLISHING</div><nav class="nav"><button class="active" data-tab="overview">▣ Overview</button><button data-tab="composer">✎ Create Post</button><button data-tab="history">◷ Publishing History</button></nav></aside><main class="main"><header class="top"><div><b id="topTitle">Social Media Integration · Admin</b><br><small id="topSub">Agency-wide client access and publishing overview</small></div><div class="top-actions"><button class="btn alt theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch theme"><span id="themeIcon">☾</span><span id="themeLabel">Dark mode</span></button><button class="btn alt" id="roleBtn">Switch to Client View</button></div></header><div class="content">
 <div class="head"><div><div class="eyebrow">SOCIAL PUBLISHING WORKSPACE</div><h1 id="pageTitle">Social Media Integration</h1><div class="muted" id="pageSub">Connect social channels, prepare content once and manage publishing.</div></div><span class="status">No accounts connected</span></div>
 <div class="note" id="notice">Frontend preview only. No Facebook, Instagram or X account is connected. No OAuth or publishing request will be sent.</div>
 <section id="overviewView"><div class="grid stats"><div class="stat"><span>Connected platforms</span><strong>0 / 3</strong><small class="muted">No accounts authorized</small></div><div class="stat"><span>Draft posts</span><strong id="draftCount">0</strong><small class="muted">Saved in this browser</small></div><div class="stat"><span>Scheduled posts</span><strong>0</strong><small class="muted">Scheduler inactive</small></div><div class="stat"><span>Published posts</span><strong>0</strong><small class="muted">No live publishing</small></div></div>
@@ -64,7 +96,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 <section id="historyView" class="hidden"><div class="panel"><div class="ptitle"><div><h2>Publishing history</h2><p>Drafts stored in this browser preview.</p></div><button class="btn alt" id="newPost">Create post</button></div><div class="tablewrap"><table class="table"><thead><tr><th>Post</th><th>Platforms</th><th>Saved</th><th>Status</th><th>Action</th></tr></thead><tbody id="historyRows"></tbody></table></div></div></section>
 </div></main></div><div class="modalbg" id="modal"><div class="modal"><h3 id="mt">Preview only</h3><p id="mm"></p><div class="actions"><button class="btn alt" id="closeModal">Close</button></div></div></div>
 <script>
-const $=id=>document.getElementById(id),key='las_social_ui_drafts_v1';let mode=new URLSearchParams(location.search).get('view')==='client'?'client':'admin',drafts=JSON.parse(localStorage.getItem(key)||'[]'),approval=JSON.parse(localStorage.getItem('las_social_approval_ui')||'{}'),access=JSON.parse(localStorage.getItem('las_social_access_ui')||'{}'),overrides={},captionMode='default',mediaUrl='';
+const themeKey='las_theme_preference_v1';function applyTheme(theme){document.documentElement.setAttribute('data-theme',theme);const dark=theme==='dark';const icon=document.getElementById('themeIcon'),label=document.getElementById('themeLabel'),btn=document.getElementById('themeToggle');if(icon)icon.textContent=dark?'☀':'☾';if(label)label.textContent=dark?'Light mode':'Dark mode';if(btn){btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');btn.title=dark?'Switch to light mode':'Switch to dark mode';}}const savedTheme=localStorage.getItem(themeKey);applyTheme(savedTheme==='dark'?'dark':'light');document.getElementById('themeToggle')?.addEventListener('click',()=>{const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';localStorage.setItem(themeKey,next);applyTheme(next);});const $=id=>document.getElementById(id),key='las_social_ui_drafts_v1';let mode=new URLSearchParams(location.search).get('view')==='client'?'client':'admin',drafts=JSON.parse(localStorage.getItem(key)||'[]'),approval=JSON.parse(localStorage.getItem('las_social_approval_ui')||'{}'),access=JSON.parse(localStorage.getItem('las_social_access_ui')||'{}'),overrides={},captionMode='default',mediaUrl='';
 const clients=['Fashion Frenzy','Malwa Nutrition Center','LIC Agent Sumit','Star Health / Suraj','Brown Beans Cake','Warm Care','Five Star Physical Academy','Zoya Enterprise'];
 function popup(t,m){$('mt').textContent=t;$('mm').textContent=m;$('modal').classList.add('show')}
 function drawClients(){$('clientRows').innerHTML=clients.map((n,i)=>'<tr><td><b>'+n+'</b></td><td><span class="status">Not connected</span></td><td><span class="status">Not connected</span></td><td><span class="status">Not connected</span></td><td><input class="toggle" type="checkbox" data-i="'+i+'" '+(approval[i]?'checked':'')+'></td><td><input class="toggle access" type="checkbox" data-access="'+i+'" '+(access[i]!==false?'checked':'')+'></td></tr>').join('');document.querySelectorAll('[data-i]').forEach(x=>x.addEventListener('change',e=>{approval[e.target.dataset.i]=e.target.checked;localStorage.setItem('las_social_approval_ui',JSON.stringify(approval));drawClients()}));document.querySelectorAll('[data-access]').forEach(x=>x.addEventListener('change',e=>{access[e.target.dataset.access]=e.target.checked;localStorage.setItem('las_social_access_ui',JSON.stringify(access));drawClients()}))}

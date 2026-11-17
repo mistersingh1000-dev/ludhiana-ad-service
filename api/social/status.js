@@ -33,8 +33,8 @@ module.exports = function handler(req, res) {
     },
     missing,
     callbackUrls: {
-      meta: "https://ads.lasmediaagency.online/api/social/meta/callback",
-      x: "https://ads.lasmediaagency.online/api/social/x/callback"
+      meta: "https://lasmediaagency.online/api/social/meta/callback",
+      x: "https://lasmediaagency.online/api/social/x/callback"
     },
     note: "This endpoint reports configuration presence only. It never returns credentials or access tokens."
   });

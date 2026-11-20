@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAS Media Agency — Live Meta Ads Portfolio Results</title>
+  <style>
+    :root { --bg: #0b1120; --card: #111827; --border: #1f2937; --text: #f9fafb; --muted: #9ca3af; --accent: #3b82f6; --green: #10b981; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding: 24px; }
+    .wrap { max-width: 1280px; margin: 0 auto; }
+    header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+    h1 { margin: 0; font-size: 1.5rem; }
+    .badge { background: rgba(16,185,129,.15); color: var(--green); border: 1px solid rgba(16,185,129,.35); padding: 6px 12px; border-radius: 999px; font-size: .85rem; }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .kpi .lbl { color: var(--muted); font-size: .82rem; margin-bottom: 6px; }
+    .kpi .val { font-size: 1.5rem; font-weight: 700; }
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; overflow-x: auto; }
+    .panel h2 { margin: 0 0 14px; font-size: 1.1rem; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    input, select { background: #0f172a; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+    th { color: var(--muted); font-weight: 600; background: #0f172a; }
+    .empty { color: var(--muted); padding: 24px 0; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>LAS Media Agency — Live Meta Ads Results</h1>
+        <small id="syncTime" style="color:var(--muted)">Loading live data...</small>
+      </div>
+      <span class="badge">Auto-Synced Daily</span>
+    </header>
+
+    <section class="kpis" id="kpiGrid"></section>
+
+    <section class="panel">
+      <h2>Client Portfolio Summary</h2>
+      <div id="summaryTableWrap"><div class="empty">Loading portfolios...</div></div>
+    </section>
+
+    <section class="panel">
+      <h2>All Campaigns &amp; Ads</h2>
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search campaign, portfolio, or ad..." />
+        <select id="portfolioFilter"><option value="">All Portfolios</option></select>
+      </div>
+      <div id="rawTableWrap"><div class="empty">Loading ad rows...</div></div>
+    </section>
+  </div>
+
+  <script>
+    let allAds = [];
+    const num = (v) => {
+      const n = parseFloat(String(v ?? "0").replace(/[^\d.-]/g, ""));
+      return isNaN(n) ? 0 : n;
+    };
+    const fmt = (n) => Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+
+    function renderTable(containerId, rows) {
+      const el = document.getElementById(containerId);
+      if (!rows.length) {
+        el.innerHTML = '<div class="empty">No data synced yet. Run your sync script to populate results.</div>';
+        return;
+      }
+      const cols = Object.keys(rows[0]);
+      el.innerHTML = `<table><thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? ""}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("searchInput").value.toLowerCase();
+      const pf = document.getElementById("portfolioFilter").value;
+      const filtered = allAds.filter((r) => {
+        if (pf && String(r.Portfolio_Name || r.Portfolio_ID) !== pf) return false;
+        if (q && !JSON.stringify(r).toLowerCase().includes(q)) return false;
+        return true;
+      });
+      renderTable("rawTableWrap", filtered);
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch("/api/meta-ads/sync");
+        const data = await res.json();
+        const summary = data.portfolios_summary || [];
+        allAds = data.ads_data || [];
+
+        document.getElementById("syncTime").textContent = data.synced_at ? `Last Updated: ${new Date(data.synced_at).toLocaleString()}` : "Waiting for first sync";
+
+        const totSpend = allAds.reduce((a, r) => a + num(r.Amount_Spent), 0);
+        const totImp = allAds.reduce((a, r) => a + num(r.Impressions), 0);
+        const totViews = allAds.reduce((a, r) => a + num(r.Views), 0);
+        const totLeads = allAds.reduce((a, r) => a + num(r.Leads), 0);
+        const avgCpl = totLeads > 0 ? totSpend / totLeads : 0;
+
+        document.getElementById("kpiGrid").innerHTML = [
+          ["Total Ad Spend", "₹" + fmt(totSpend)],
+          ["Total Impressions", fmt(totImp)],
+          ["Total Views", fmt(totViews)],
+          ["Total Leads", fmt(totLeads)],
+          ["Avg Cost / Lead", "₹" + fmt(avgCpl)],
+        ].map(([l, v]) => `<div class="kpi"><div class="lbl">${l}</div><div class="val">${v}</div></div>`).join("");
+
+        renderTable("summaryTableWrap", summary);
+
+        const sel = document.getElementById("portfolioFilter");
+        const names = [...new Set(allAds.map(r => String(r.Portfolio_Name || r.Portfolio_ID || "")).filter(Boolean))];
+        sel.innerHTML = '<option value="">All Portfolios</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("");
+        renderTable("rawTableWrap", allAds);
+      } catch (e) {
+        document.getElementById("syncTime").textContent = "Error loading data";
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("portfolioFilter").addEventListener("change", applyFilters);
+    loadData();
+  </script>
+</body>
+</html>

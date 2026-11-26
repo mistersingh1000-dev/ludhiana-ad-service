@@ -33,18 +33,18 @@
         <h1>LAS Media Agency — Live Meta Ads Results</h1>
         <small id="syncTime" style="color:var(--muted)">Loading live data...</small>
       </div>
-      <span class="badge">Auto-Synced Daily</span>
+      <span class="badge">Metric-separated reporting · verification pending</span>
     </header>
 
     <section class="kpis" id="kpiGrid"></section>
 
     <section class="panel">
-      <h2>Client Portfolio Summary</h2>
+      <h2>Ad Account Summary</h2><p style="color:var(--muted);font-size:.85rem;margin-top:-6px">Messaging conversations and lead results are classified separately. Reach is shown per campaign and is not added across campaigns.</p>
       <div id="summaryTableWrap"><div class="empty">Loading portfolios...</div></div>
     </section>
 
     <section class="panel">
-      <h2>All Campaigns &amp; Ads</h2>
+      <h2>Campaign Results</h2>
       <div class="controls">
         <input type="text" id="searchInput" placeholder="Search campaign, portfolio, or ad..." />
         <select id="portfolioFilter"><option value="">All Portfolios</option></select>
@@ -56,63 +56,141 @@
   <script>
     let allAds = [];
     const num = (v) => {
-      const n = parseFloat(String(v ?? "0").replace(/[^\d.-]/g, ""));
-      return isNaN(n) ? 0 : n;
+      const n = parseFloat(String(v ?? "").replace(/[^\\d.-]/g, ""));
+      return Number.isFinite(n) ? n : 0;
     };
     const fmt = (n) => Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+    const pick = (r, keys) => {
+      for (const key of keys) {
+        if (r && r[key] !== undefined && r[key] !== null && String(r[key]).trim() !== "") return r[key];
+      }
+      return "";
+    };
+    const escapeHtml = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+    const indicator = (r) => String(pick(r, ["Result_Indicator", "Result indicator", "Result_Type", "Result type"])).toLowerCase();
+    const resultValue = (r) => num(pick(r, ["Results", "Result"]));
+    const isMessaging = (r) => {
+      const s = indicator(r);
+      return s.includes("messaging_conversation_started") || s.includes("messaging conversation");
+    };
+    const isLead = (r) => indicator(r).includes("lead");
+    const isReachResult = (r) => indicator(r).trim() === "reach";
+    const campaignName = (r) => pick(r, ["Campaign_Name", "Campaign name", "Campaign"]);
+    const accountLabel = (r) => pick(r, ["Portfolio_Name", "Portfolio name", "Ad_Account_Name", "Account name"]) ||
+      pick(r, ["Portfolio_ID", "Ad_Account_ID", "Account ID"]);
+    const spend = (r) => num(pick(r, ["Amount_Spent", "Amount spent (INR)", "Amount spent"]));
+    const reach = (r) => num(pick(r, ["Reach", "reach"]));
+    const impressions = (r) => num(pick(r, ["Impressions", "impressions"]));
 
-    function renderTable(containerId, rows) {
+    function renderTable(containerId, rows, emptyText) {
       const el = document.getElementById(containerId);
       if (!rows.length) {
-        el.innerHTML = '<div class="empty">No data synced yet. Run your sync script to populate results.</div>';
+        el.innerHTML = '<div class="empty">' + escapeHtml(emptyText || "No data available.") + '</div>';
         return;
       }
       const cols = Object.keys(rows[0]);
-      el.innerHTML = `<table><thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? ""}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+      const head = cols.map((c) => "<th>" + escapeHtml(c) + "</th>").join("");
+      const body = rows.map((r) => "<tr>" + cols.map((c) => "<td>" + escapeHtml(r[c]) + "</td>").join("") + "</tr>").join("");
+      el.innerHTML = "<table><thead><tr>" + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+    }
+
+    function buildSummary(rows) {
+      const groups = new Map();
+      rows.forEach((r) => {
+        const label = String(accountLabel(r) || "Unlabelled account");
+        if (!groups.has(label)) groups.set(label, { "Ad account / portfolio": label, "Campaign rows": 0, "Messaging conversations": 0, "Lead results": 0, "Amount spent": 0, "Impressions": 0, "Reach": "See campaign rows — not summed" });
+        const g = groups.get(label);
+        g["Campaign rows"] += 1;
+        g["Amount spent"] += spend(r);
+        g["Impressions"] += impressions(r);
+        if (isMessaging(r)) g["Messaging conversations"] += resultValue(r);
+        if (isLead(r)) g["Lead results"] += resultValue(r);
+      });
+      return Array.from(groups.values()).map((g) => ({
+        "Ad account / portfolio": g["Ad account / portfolio"],
+        "Campaign rows": g["Campaign rows"],
+        "Messaging conversations": fmt(g["Messaging conversations"]),
+        "Lead results": fmt(g["Lead results"]),
+        "Amount spent": "₹" + fmt(g["Amount spent"]),
+        "Impressions": fmt(g["Impressions"]),
+        "Reach": g["Reach"]
+      }));
+    }
+
+    function campaignRows(rows) {
+      return rows.map((r) => ({
+        "Ad account / portfolio": accountLabel(r),
+        "Campaign": campaignName(r),
+        "Delivery": pick(r, ["Delivery_Status", "Campaign delivery", "Delivery", "Status"]),
+        "Results": pick(r, ["Results", "Result"]),
+        "Result type": pick(r, ["Result_Indicator", "Result indicator", "Result_Type", "Result type"]),
+        "Messaging conversations": isMessaging(r) ? fmt(resultValue(r)) : "",
+        "Lead results": isLead(r) ? fmt(resultValue(r)) : "",
+        "Reach result": isReachResult(r) ? fmt(resultValue(r)) : "",
+        "Cost per result": pick(r, ["Cost_Per_Result", "Cost per results", "Cost per result"]),
+        "Amount spent": "₹" + fmt(spend(r)),
+        "Reach": fmt(reach(r)),
+        "Impressions": fmt(impressions(r)),
+        "Reporting starts": pick(r, ["Reporting starts", "Reporting_Starts"]),
+        "Reporting ends": pick(r, ["Reporting ends", "Reporting_Ends"])
+      }));
     }
 
     function applyFilters() {
       const q = document.getElementById("searchInput").value.toLowerCase();
       const pf = document.getElementById("portfolioFilter").value;
       const filtered = allAds.filter((r) => {
-        if (pf && String(r.Portfolio_Name || r.Portfolio_ID) !== pf) return false;
+        if (pf && String(accountLabel(r)) !== pf) return false;
         if (q && !JSON.stringify(r).toLowerCase().includes(q)) return false;
         return true;
       });
-      renderTable("rawTableWrap", filtered);
+      renderTable("rawTableWrap", campaignRows(filtered), "No matching campaign rows.");
     }
 
     async function loadData() {
       try {
-        const res = await fetch("/api/meta-ads/sync");
+        const res = await fetch("/api/meta-ads/sync", { cache: "no-store" });
+        if (!res.ok) throw new Error("Dashboard data request failed: " + res.status);
         const data = await res.json();
-        const summary = data.portfolios_summary || [];
-        allAds = data.ads_data || [];
+        allAds = Array.isArray(data.ads_data) ? data.ads_data : [];
+        const synced = data.synced_at || (allAds[0] && allAds[0].Last_Synced_UTC);
+        document.getElementById("syncTime").textContent = synced
+          ? "Last data sync: " + new Date(synced).toLocaleString()
+          : "No verified sync timestamp available";
 
-        document.getElementById("syncTime").textContent = data.synced_at ? `Last Updated: ${new Date(data.synced_at).toLocaleString()}` : "Waiting for first sync";
+        const totalSpend = allAds.reduce((a, r) => a + spend(r), 0);
+        const totalImpressions = allAds.reduce((a, r) => a + impressions(r), 0);
+        const messageRows = allAds.filter(isMessaging);
+        const leadRows = allAds.filter(isLead);
+        const totalMessages = messageRows.reduce((a, r) => a + resultValue(r), 0);
+        const totalLeads = leadRows.reduce((a, r) => a + resultValue(r), 0);
+        const totalViews = allAds.reduce((a, r) => a + num(pick(r, ["Views", "Video plays", "3-second video plays"])), 0);
 
-        const totSpend = allAds.reduce((a, r) => a + num(r.Amount_Spent), 0);
-        const totImp = allAds.reduce((a, r) => a + num(r.Impressions), 0);
-        const totViews = allAds.reduce((a, r) => a + num(r.Views), 0);
-        const totLeads = allAds.reduce((a, r) => a + num(r.Leads), 0);
-        const avgCpl = totLeads > 0 ? totSpend / totLeads : 0;
+        const kpis = [
+          ["Total Ad Spend", "₹" + fmt(totalSpend)],
+          ["Messaging Conversations", messageRows.length ? fmt(totalMessages) : "Not reported"],
+          ["Lead Results", leadRows.length ? fmt(totalLeads) : "Not reported"],
+          ["Impressions", fmt(totalImpressions)],
+          ["Video Views", fmt(totalViews)]
+        ];
+        document.getElementById("kpiGrid").innerHTML = kpis.map(([l, v]) =>
+          '<div class="kpi"><div class="lbl">' + escapeHtml(l) + '</div><div class="val">' + escapeHtml(v) + '</div></div>'
+        ).join("");
 
-        document.getElementById("kpiGrid").innerHTML = [
-          ["Total Ad Spend", "₹" + fmt(totSpend)],
-          ["Total Impressions", fmt(totImp)],
-          ["Total Views", fmt(totViews)],
-          ["Total Leads", fmt(totLeads)],
-          ["Avg Cost / Lead", "₹" + fmt(avgCpl)],
-        ].map(([l, v]) => `<div class="kpi"><div class="lbl">${l}</div><div class="val">${v}</div></div>`).join("");
-
-        renderTable("summaryTableWrap", summary);
-
+        renderTable("summaryTableWrap", buildSummary(allAds), "No campaign account data synced yet.");
         const sel = document.getElementById("portfolioFilter");
-        const names = [...new Set(allAds.map(r => String(r.Portfolio_Name || r.Portfolio_ID || "")).filter(Boolean))];
-        sel.innerHTML = '<option value="">All Portfolios</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("");
-        renderTable("rawTableWrap", allAds);
+        const names = [...new Set(allAds.map((r) => String(accountLabel(r) || "")).filter(Boolean))].sort();
+        sel.innerHTML = '<option value="">All Ad Accounts</option>' + names.map((n) =>
+          '<option value="' + escapeHtml(n) + '">' + escapeHtml(n) + '</option>'
+        ).join("");
+        renderTable("rawTableWrap", campaignRows(allAds), "No campaign rows synced yet.");
       } catch (e) {
-        document.getElementById("syncTime").textContent = "Error loading data";
+        document.getElementById("syncTime").textContent = "Dashboard data unavailable — verification required";
+        document.getElementById("kpiGrid").innerHTML = "";
+        document.getElementById("summaryTableWrap").innerHTML = '<div class="empty">Results are temporarily unavailable for verification.</div>';
+        document.getElementById("rawTableWrap").innerHTML = '<div class="empty">Campaign data could not be loaded.</div>';
       }
     }
 
